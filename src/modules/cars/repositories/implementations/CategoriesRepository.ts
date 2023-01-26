@@ -10,7 +10,6 @@ import {
 export class CategoriesRepository implements ICategoriesRepository {
     private repository: Repository<Category>;
 
-
     constructor() {
         this.repository = AppDataSource.getRepository(Category);
     }
