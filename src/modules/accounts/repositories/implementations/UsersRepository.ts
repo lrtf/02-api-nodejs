@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
 
-import AppDataSource from "../../../../../ormconfig";
+import AppDataSource from "../../../../database/datasource";
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 import { User } from "../../entities/User";
 import { IUsersReposiotry } from "../IUsersRepository";
@@ -32,6 +32,16 @@ export class UsersRepository implements IUsersReposiotry {
         const user = await this.repository.findOne({
             where: {
                 email,
+            },
+        });
+
+        return user;
+    }
+
+    async findById(id: string): Promise<User> {
+        const user = await this.repository.findOne({
+            where: {
+                id,
             },
         });
 
