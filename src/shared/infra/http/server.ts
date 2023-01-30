@@ -4,12 +4,13 @@ import express, { Request, Response } from "express";
 import "express-async-errors";
 import swaggerUi from "swagger-ui-express";
 
-import { AppError } from "@errors/AppError";
-
 import "@shared/container";
-import { createConnection } from "./database/datasource";
+
+import { AppError } from "@shared/errors/AppError";
+import { createConnection } from "@shared/infra/typeorm/datasource";
+
+import swaggerFile from "../../../swagger.json";
 import { router } from "./routes";
-import swaggerFile from "./swagger.json";
 
 createConnection("localhost");
 
