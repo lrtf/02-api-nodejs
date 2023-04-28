@@ -12,7 +12,7 @@ const AppDataSource = new DataSource({
 
     database: "aula02",
 
-    migrations: ["./src/database/migrations/**/*.ts"],
+    migrations: ["./src/shared/infra/typeorm/migrations/*.ts"],
 
     entities: ["./src/modules/**/entities/*.{ts,js}"],
 });
