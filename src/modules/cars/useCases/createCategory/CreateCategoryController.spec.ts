@@ -5,7 +5,7 @@ import { createConnection } from "@shared/infra/typeorm/datasource";
 
 describe("Create Category Controller", () => {
     beforeAll(async () => {
-        const connection = await createConnection();
+        const connection = await createConnection("test");
         await connection.runMigrations();
     });
     it("should be able to create a new category ", async () => {
