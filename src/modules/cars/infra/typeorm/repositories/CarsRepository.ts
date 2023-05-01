@@ -12,6 +12,7 @@ export class CarsRepository implements ICarsRepository {
     constructor() {
         this.repository = AppDataSource.getRepository(Car);
     }
+
     async create({
         name,
         description,
@@ -41,5 +42,19 @@ export class CarsRepository implements ICarsRepository {
         });
 
         return car;
+    }
+
+    async findAvailable(
+        category_id?: string,
+        brand?: string,
+        name?: string
+    ): Promise<Car[]> {
+        const cars = await this.repository.find({
+            where: {
+                available: true,
+            },
+        });
+
+        return cars;
     }
 }
