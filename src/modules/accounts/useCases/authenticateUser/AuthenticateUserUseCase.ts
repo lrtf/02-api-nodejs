@@ -2,7 +2,9 @@ import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { inject, injectable } from "tsyringe";
 
+import auth from "@config/auth";
 import { IUsersReposiotry } from "@modules/accounts/repositories/IUsersRepository";
+import { IUsersTokensRepository } from "@modules/accounts/repositories/IUsersTokensRepository";
 import { AppError } from "@shared/errors/AppError";
 
 interface IRequest {
@@ -22,7 +24,9 @@ interface IResponse {
 export class AuthenticateUserUseCase {
     constructor(
         @inject("UsersRepository")
-        private usersRepository: IUsersReposiotry
+        private usersRepository: IUsersReposiotry,
+        @inject("UsersTokensRepository")
+        private usersTokensRepository: IUsersTokensRepository
     ) {}
 
     async execute({ email, password }: IRequest): Promise<IResponse> {
@@ -38,9 +42,20 @@ export class AuthenticateUserUseCase {
             throw new AppError("Email or password incorrect!");
         }
 
-        const token = sign({}, "yWi5R7wKqoGcoUb+MujrHctmwlWD/aMTj1zbVrAIOWo=", {
+        const token = sign({}, auth.secret_token, {
             subject: user.id,
-            expiresIn: "1d",
+            expiresIn: auth.expires_in_token,
+        });
+
+        const refresh_token = sign({ email }, auth.secret_refresh_token, {
+            subject: user.id,
+            expiresIn: auth.expires_refresh_token,
+        });
+
+        await this.usersTokensRepository.create({
+            expires_date,
+            user_id: user.id,
+            refresh_token,
         });
 
         const tokenReturn: IResponse = {
